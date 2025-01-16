@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Project;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -27,7 +28,8 @@ class ModuelController extends Controller
      */
     public function create()
     {
-        //
+        $projects = Project::get();
+        return view('modules.create',compact('projects'));
     }
 
     /**
