@@ -11,6 +11,7 @@ use App\Http\Controllers\RoutineController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
 
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
@@ -20,6 +21,8 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(MailController::class)->prefix('mail')->name('mail.')->group(function () {
         Route::get('/', 'index')->name('inbox');
     });
+    Route::resource('users', UserController::class);
+
     Route::resource('projects', ProjectController::class);
     Route::post('project/team', [ProjectController::class, 'addMember'])->name('projects.addMember');
     Route::get('projects/{project}/tasks', [TaskController::class, 'index'])->name('projects.tasks.index');
@@ -28,7 +31,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('tasks/{task}', [TaskController::class, 'show'])->name('tasks.show');
     Route::put('tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
     Route::post('tasks/{task}/update-status', [TaskController::class, 'updateStatus']);
-    
+
     Route::resource('routines', RoutineController::class)->except(['show']);
     Route::get('routines/showAll', [RoutineController::class, 'showAll'])->name('routines.showAll');
     Route::get('routines/daily', [RoutineController::class, 'showDaily'])->name('routines.showDaily');
@@ -51,16 +54,17 @@ Route::middleware(['auth'])->group(function () {
         $recentNotes = $user->notes()->latest()->take(5)->get();
 
         $upcomingReminders = $user->reminders()->where('date', '>=', now())->orderBy('date')->take(5)->get();
+//        dd($upcomingReminders);
 
         return view('dashboard', compact(
-            'tasksCount', 
-            'routinesCount', 
-            'notesCount', 
+            'tasksCount',
+            'routinesCount',
+            'notesCount',
             'remindersCount',
-            'filesCount', 
-            'recentTasks', 
-            'todayRoutines', 
-            'recentNotes', 
+            'filesCount',
+            'recentTasks',
+            'todayRoutines',
+            'recentNotes',
             'upcomingReminders'
         ));
     })->name('dashboard');

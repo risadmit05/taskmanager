@@ -6,7 +6,7 @@
     <div class="container">
         <h2>Welcome to your Dashboard</h2>
         <p>This is your dashboard where you can manage your tasks, routines, notes, and files.</p>
-        
+
         <div class="row mb-4">
             <div class="col-md-3 mb-4">
                 <div class="card shadow-sm h-100">
@@ -97,9 +97,9 @@
                         <h5 class="card-title">Upcoming Reminders</h5>
                         <ul class="list-group flex-grow-1">
                             @foreach($upcomingReminders as $reminder)
-                                <li class="list-group-item d-flex justify-content-between align-items-center {{ $reminder->date->isToday() ? 'bg-warning' : ($reminder->date->isPast() ? 'bg-danger' : 'bg-success') }}">
+                                <li class="list-group-item d-flex justify-content-between align-items-center {{ \Carbon\Carbon::parse($reminder->date)->isToday() ? 'bg-warning' : (\Carbon\Carbon::parse($reminder->date)->isPast() ? 'bg-danger' : 'bg-success') }}">
                                     {{ $reminder->title }}
-                                    <span class="badge bg-primary rounded-pill">{{ $reminder->date->format('M d') }} {{ $reminder->time ? $reminder->time->format('H:i') : '' }}</span>
+                                    <span class="badge bg-primary rounded-pill">{{ \Carbon\Carbon::parse($reminder->date)->format('M d') }} {{ $reminder->time ? \Carbon\Carbon::parse($reminder->date)->format('H:i') : '' }}</span>
                                 </li>
                             @endforeach
                         </ul>

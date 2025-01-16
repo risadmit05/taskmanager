@@ -22,7 +22,7 @@
             margin: 0;
             overflow: hidden;
             background-color: rgb(241 245 249);
-            font-family: "Noto Sans", sans-serif !important; 
+            font-family: "Noto Sans", sans-serif !important;
         }
 
         .btn {
@@ -122,6 +122,12 @@
                     <i class="bi bi-inbox"></i> Inbox
                 </a>
             </li> --}}
+            <li class="nav-item">
+                <a class="nav-link {{ request()->is('users*') ? 'active' : '' }}"
+                   href="{{ route('users.index') }}">
+                    <i class="bi bi-folder"></i> Users
+                </a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link {{ request()->is('projects*') ? 'active' : '' }}"
                     href="{{ route('projects.index') }}">
