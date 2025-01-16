@@ -1,67 +1,58 @@
 @extends('layouts.app')
 @section('title')
-    Create User
+    Create Modules
 @endsection
 @section('content')
     <div class="container mb-3">
-        <h2 class="mb-4 shadow-sm p-3 rounded bg-white">Create User</h2>
+        <h2 class="mb-4 shadow-sm p-3 rounded bg-white">Create Modules</h2>
         <div class="card border-0 shadow-sm m-auto" style="max-width: 600px;">
             <div class="card-body">
                 <form action="{{ route('users.store') }}" method="POST">
                     @csrf
                     <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
-                        <input type="text" name="name" id="name" class="form-control" required>
-                        @error('name')
-                        <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" name="email" id="email" class="form-control" required>
-                        @error('email')
-                        <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" name="password" id="password" class="form-control" required>
-                        @error('password')
-                        <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label for="designation_id" class="form-label">Designation</label>
-                        <select name="designation_id" id="designation_id" class="form-select" required>
-                            <option value="">Select Designation</option>
-                            <option value="1">Designation 1</option>
-                            <option value="2">Designation 2</option>
-                            <option value="3">Designation 3</option>
-                            <option value="4">Designation 4</option>
-{{--                            @foreach($designations as $designation)--}}
-{{--                                <option value="{{ $designation->id }}">{{ $designation->name }}</option>--}}
-{{--                            @endforeach--}}
+                        <label for="project_id" class="form-label">Project</label>
+                        <select name="project_id" id="project_id" class="form-select" required>
+                            <option value="">Select Project</option>
+                            @if(isset($projects))
+                                @foreach($projects as $project)
+                                    <option value="{{ $project->id }}">{{ $project->name }}</option>
+                                @endforeach
+                            @endif
                         </select>
-                        @error('designation_id')
+                        @error('project_id')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="role_id" class="form-label">Role</label>
-                        <select name="role_id" id="role_id" class="form-select" required>
-                            <option value="">Select Role</option>
-                            <option value="1">Role 1</option>
-                            <option value="2">Role 2</option>
-                            <option value="3">Role 3</option>
-{{--                            @foreach($roles as $role)--}}
-{{--                                <option value="{{ $role->id }}">{{ $role->name }}</option>--}}
-{{--                            @endforeach--}}
+                        <label for="module_id" class="form-label">Module</label>
+                        <select name="module_id" id="module_id" class="form-select" >
+                            <option value="">Select Module</option>
+                            @if(isset($modules))
+                                @foreach($modules as $module)
+                                    <option value="{{ $module->id }}">{{ $module->name }}</option>
+                                @endforeach
+                            @endif
                         </select>
-                        @error('role_id')
+                        @error('module_id')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
-                    <button type="submit" class="btn btn-primary">Create User</button>
+                    <div class="mb-3">
+                        <label for="sub_module_id" class="form-label">Sub Module</label>
+                        <select name="sub_module_id" id="sub_module_id" class="form-select" >
+                            <option value="">Select Sub Module</option>
+                            @if(isset($sub_modules))
+                                @foreach($sub_modules as $sub_module)
+                                    <option value="{{ $sub_module->id }}">{{ $sub_module->name }}</option>
+                                @endforeach
+                            @endif
+                        </select>
+                        @error('sub_module_id')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Create Modules</button>
                 </form>
             </div>
         </div>
