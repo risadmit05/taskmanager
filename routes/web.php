@@ -12,6 +12,7 @@ use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ModuelController;
 
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
@@ -22,6 +23,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', 'index')->name('inbox');
     });
     Route::resource('users', UserController::class);
+    Route::resource('modules', ModuelController::class);
 
     Route::resource('projects', ProjectController::class);
     Route::post('project/team', [ProjectController::class, 'addMember'])->name('projects.addMember');
