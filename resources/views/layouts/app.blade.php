@@ -167,6 +167,12 @@
                     <i class="bi bi-file"></i> Files
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->is('lookups*') ? 'active' : '' }}"
+                    href="{{ route('lookups.index') }}">
+                    <i class="bi bi-folder"></i> Lookups
+                </a>
+            </li>
         </ul>
     </div>
     <div class="content d-flex flex-column">
