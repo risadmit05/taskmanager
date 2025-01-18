@@ -2,6 +2,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ChecklistItemController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\LookupController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\ProjectController;
@@ -42,9 +43,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('routines/daily', [RoutineController::class, 'showDaily'])->name('routines.showDaily');
     Route::get('routines/weekly', [RoutineController::class, 'showWeekly'])->name('routines.showWeekly');
     Route::get('routines/monthly', [RoutineController::class, 'showMonthly'])->name('routines.showMonthly');
+
+    //Ajax Calling
+     Route::get('/get-types', [LookupController::class, 'getTypes'])->name('get.types');
+
     Route::resource('files', FileController::class);
     Route::resource('notes', NoteController::class);
     Route::resource('reminders', ReminderController::class);
+    Route::resource('lookups', LookupController::class);
+
     Route::resource('checklist-items', ChecklistItemController::class);
     Route::get('checklist-items/{checklistItem}/update-status', [ChecklistItemController::class, 'updateStatus'])->name('checklist-items.update-status');
     Route::get('/', function () {

@@ -13,7 +13,8 @@
                         <label for="title" class="form-label">Title</label>
                         <input type="text" name="title" id="title" class="form-control" required>
                         @error('title')
-                            <span class="text-danger">{{ $message }}</span>
+                            <span class="text-danger">{{ $message }}</span> 
+                            
                         @enderror
                     </div>
                     <div class="mb-3">
