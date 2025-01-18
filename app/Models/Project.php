@@ -43,6 +43,10 @@ class Project extends Model
     {
         return $this->hasMany(File::class);
     }
+    public function modules()
+    {
+        return $this->hasMany(Module::class);
+    }
 
     public function getStatusAttribute()
     {
