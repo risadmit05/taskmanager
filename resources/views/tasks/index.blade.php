@@ -45,17 +45,17 @@
                         <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#createTaskModal"
                             data-status="to_do" style="padding-top: 0.5rem; padding-bottom: 0.5rem;">+</button>
                     </div>
-                    
+
                     <div class="kanban-list" id="to_do">
                         @foreach ($tasks['to_do'] ?? [] as $task)
                             <div class="card mb-3 kanban-item" data-id="{{ $task->id }}" draggable="true">
                                 <div class="card-body">
                                     <h5 class="card-title">
-                                        {{ $task->title }} 
+                                        {{ $task->title }}
                                         <span style="font-size: 12px;" class="badge {{ $task->priority == 'low' ? 'bg-success' : ($task->priority == 'medium' ? 'bg-warning' : 'bg-danger') }}">{{ ucfirst($task->priority) }}</span>
                                     </h5>
-                                    
-                                    <p class="card-text">{{ $task->description }}</p>
+
+                                    <p class="card-text">{!! $task->description !!}</p>
                                     <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-primary btn-sm"><i class="bi bi-eye"></i></a>
                                 </div>
                             </div>
@@ -72,13 +72,13 @@
                             data-bs-target="#createTaskModal" data-status="in_progress"
                             style="padding-top: 0.5rem; padding-bottom: 0.5rem;">+</button>
                     </div>
-                    
+
                     <div class="kanban-list" id="in_progress">
                         @foreach ($tasks['in_progress'] ?? [] as $task)
                             <div class="card mb-3 kanban-item" data-id="{{ $task->id }}" draggable="true">
                                 <div class="card-body">
                                     <h5 class="card-title">{{ $task->title }}</h5>
-                                    <p class="card-text">{{ $task->description }}</p>
+                                    <p class="card-text">{!! $task->description !!}</p>
                                     <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-warning btn-sm"><i class="bi bi-eye"></i></a>
                                 </div>
                             </div>
@@ -99,7 +99,7 @@
                             <div class="card mb-3 kanban-item" data-id="{{ $task->id }}" draggable="true">
                                 <div class="card-body">
                                     <h5 class="card-title">{{ $task->title }}</h5>
-                                    <p class="card-text">{{ $task->description }}</p>
+                                    <p class="card-text">{!! $task->description !!}</p>
                                     <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-success btn-sm"><i class="bi bi-eye"></i></a>
                                 </div>
                             </div>
@@ -110,7 +110,7 @@
         </div>
 
         <!-- Create Task Modal -->
-        <div class="modal fade" id="createTaskModal" tabindex="-1" aria-labelledby="createTaskModalLabel"
+        <div class="modal fade modal-lg" id="createTaskModal" tabindex="-1" aria-labelledby="createTaskModalLabel"
             aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -121,48 +121,96 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <div class="mb-3">
-                                <label for="title" class="form-label">Title</label>
-                                <input type="text" name="title" id="title" class="form-control" required>
-                                @error('title')
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="mb-3">
+                                        <label for="title" class="form-label">Title <span style="color:red;">*</span></label>
+                                        <input type="text" name="title" id="title" class="form-control" required>
+                                        @error('title')
+                                        <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="module_id" class="form-label">Module <span style="color:red;">*</span></label>
+                                    <select name="module_id" id="module_id" class="form-select" required>
+                                        <option value="">Select Module</option>
+                                        @foreach($modules as $module)
+                                            <option value="{{$module->id??''}}">{{$module->name??''}}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('module_id')
                                     <span class="text-danger">{{ $message }}</span>
-                                @enderror
+                                    @enderror
+                                </div>
+                                </div>
+                                <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="sub_module_id" class="form-label">Sub Module</label>
+                                    <select name="sub_module_id" id="sub_module_id" class="form-select" >
+                                    </select>
+                                    @error('sub_module_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                </div>
+                                <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="sub_sub_module_id" class="form-label">Sub Module</label>
+                                    <select name="sub_sub_module_id" id="sub_sub_module_id" class="form-select" >
+                                    </select>
+                                    @error('sub_sub_module_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="due_date" class="form-label">Due Date <span style="color:red;">*</span></label>
+                                        <input type="date" name="due_date" id="due_date" class="form-control" required>
+                                        @error('due_date')
+                                        <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="priority" class="form-label">Priority <span style="color:red;">*</span></label>
+                                        <select name="priority" id="priority" class="form-select" required>
+                                            <option value="low">Low</option>
+                                            <option value="medium">Medium</option>
+                                            <option value="high">High</option>
+                                        </select>
+                                        @error('priority')
+                                        <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="user_id" class="form-label">Assign To <span style="color:red;">*</span></label>
+                                        <select name="user_id" id="user_id" class="form-select" required>
+                                            <option value="{{auth()->user()->id}}">Self</option>
+                                            @foreach ($users as $user)
+                                                <option value="{{$user->id}}">{{$user->name}}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('user_id')
+                                        <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+
                             </div>
+
+
+
                             <div class="mb-3">
-                                <label for="description" class="form-label">Description</label>
-                                <textarea name="description" id="description" class="form-control"></textarea>
+                                <label for="description" class="form-label">Description <span style="color:red;">*</span></label>
+                                <textarea name="description" id="description" class="form-control" required></textarea>
                                 @error('description')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="mb-3">
-                                <label for="due_date" class="form-label">Due Date</label>
-                                <input type="date" name="due_date" id="due_date" class="form-control">
-                                @error('due_date')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="mb-3">
-                                <label for="priority" class="form-label">Priority</label>
-                                <select name="priority" id="priority" class="form-select" required>
-                                    <option value="low">Low</option>
-                                    <option value="medium">Medium</option>
-                                    <option value="high">High</option>
-                                </select>
-                                @error('priority')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="mb-3">
-                                <label for="user_id" class="form-label">Assign To</label>
-                                <select name="user_id" id="user_id" class="form-select">
-                                    <option value="{{auth()->user()->id}}">Self</option>
-                                    @foreach ($users as $user)  
-                                        <option value="{{$user->id}}">{{$user->name}}</option>
-                                    @endforeach
-                                </select>
-                                @error('user_id')
-                                    <span class="text-danger">{{ $message }}</span>
+                                <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
                             <input type="hidden" name="status" id="task_status">
@@ -178,6 +226,9 @@
         </div>
     </div>
 
+
+@endsection
+@section('footer_js')
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
             const kanbanItems = document.querySelectorAll('.kanban-item');
@@ -186,8 +237,8 @@
             const taskStatusInput = document.getElementById('task_status');
 
             createTaskModal.addEventListener('show.bs.modal', function(event) {
-                var button = event.relatedTarget; 
-                var status = button.getAttribute('data-status'); 
+                var button = event.relatedTarget;
+                var status = button.getAttribute('data-status');
                 taskStatusInput.value = status;
             });
 
@@ -249,6 +300,61 @@
                     console.error('Error:', error);
                 });
             }
+        });
+    </script>
+    <script>
+
+        $('#module_id').on('change', function () {
+            var module_id = $(this).val();
+            // alert(divition_id);
+            if (module_id) {
+                $.ajax({
+                    url: '{{ url("/ajaxSearchGetSubModuleById") }}' + '/' + module_id,
+                    type: 'GET',
+                    success: function (data) {
+                        $('#sub_module_id').empty();
+                        if (data && Object.keys(data).length > 0) {
+                            $('#sub_module_id').append('<option value="">Select Sub Module</option>');
+                            $.each(data, function (key, value) {
+                                $('#sub_module_id').append('<option value="' + value.id + '">' + value.name + '</option>');
+                            });
+                        } else {
+                            $('#sub_module_id').append('<option value=""> No Data Available </option>');
+                        }
+                        // $("#permanent_district_id").trigger("change");
+                        $("#sub_module_id").trigger("change");
+                        $("#sub_sub_module_id").html("");
+                    }
+                });
+            }
+        });
+        $('#sub_module_id').on('change', function () {
+            var sub_module_id = $(this).val();
+            if (sub_module_id) {
+                $.ajax({
+                    url: '{{ url("/ajaxSearchGetSubModuleById") }}' + '/' + sub_module_id,
+                    type: 'GET',
+                    success: function (data) {
+                        $('#sub_sub_module_id').empty();
+                        if (data && Object.keys(data).length > 0) {
+                            $('#sub_sub_module_id').append('<option value="">Select Sub Module</option>');
+                            $.each(data, function (key, value) {
+                                $('#sub_sub_module_id').append('<option value="' + value.id + '">' + value.name + '</option>');
+                            });
+                        } else {
+                            $('#sub_sub_module_id').append('<option value=""> No Data Available </option>');
+                        }
+                        $("#sub_sub_module_id").trigger("change");
+                    }
+                });
+            }
+        });
+        $(document).ready(function() {
+            $('#description').summernote({
+                placeholder: 'Write news description',
+                tabsize: 2,
+                height: 180
+            });
         });
     </script>
 @endsection

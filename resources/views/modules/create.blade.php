@@ -15,7 +15,7 @@
                 <form action="{{ route('modules.store') }}" method="POST">
                     @csrf
                     <div class="mb-3">
-                        <label for="project_id" class="form-label">Project</label>
+                        <label for="project_id" class="form-label">Project <span style="color:red;">*</span></label>
                         <select name="project_id" id="project_id" class="form-select" required>
                             <option value="">Select Project</option>
                             @if(isset($projects))
@@ -47,7 +47,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
+                        <label for="name" class="form-label">Name <span style="color:red;">*</span></label>
                         <input type="text" name="name" id="name" class="form-control" required>
                         @error('name')
                         <span class="text-danger">{{ $message }}</span>
@@ -81,7 +81,7 @@
                                 $('#module_id').append('<option value=""> No Data Available </option>');
                             }
                             // $("#permanent_district_id").trigger("change");
-                            $("#sub_module_id").trigger("change");
+                            $("#sub_module_id").html("");
                         }
                     });
                 }
@@ -105,7 +105,7 @@
                                 $('#sub_module_id').append('<option value=""> No Data Available </option>');
                             }
                             // $("#permanent_district_id").trigger("change");
-                            // $("#sub_module_id").trigger("change");
+                            $("#sub_module_id").trigger("change");
                         }
                     });
                 }

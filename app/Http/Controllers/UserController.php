@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Lookup;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,7 +33,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.create');
+        $user_roles = Lookup::where('type','user_role')->get(['name','code']);
+        $designations = Lookup::where('type','designation')->get(['name','code']);
+        return view('users.create',compact('user_roles','designations'));
     }
 
     /**

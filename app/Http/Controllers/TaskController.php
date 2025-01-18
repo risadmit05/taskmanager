@@ -11,17 +11,21 @@ class TaskController extends Controller
     public function index(Project $project)
     {
         $tasks = $project->tasks()->get()->groupBy('status');
-        $users = $project->users()->get();  
-        return view('tasks.index', compact('project', 'tasks', 'users'));
+        $users = $project->users()->get();
+        $modules = $project->modules()->where('is_parent',1)->get();
+        return view('tasks.index', compact('project', 'tasks', 'users','modules'));
     }
 
     public function store(Request $request, Project $project)
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
+            'module_id' => 'required|integer|exists:modules,id',
+            'sub_module_id' => 'nullable|integer|exists:modules,id',
+            'sub_sub_module_id' => 'nullable|integer|exists:modules,id',
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'due_date' => 'nullable|date',
+            'description' => 'required|string',
+            'due_date' => 'required|date',
             'priority' => 'required|in:low,medium,high',
         ]);
 
@@ -32,7 +36,10 @@ class TaskController extends Controller
 
     public function show(Task $task)
     {
-        return view('tasks.show', compact('task'));
+        $modules = $task->project->modules()->where('is_parent',1)->get(['id','name']);
+        $sub_modules = $task->project->modules()->where('is_parent',0)->where('parent_id',$task->module_id)->get(['id','name']);
+        $sub_sub_modules = $task->project->modules()->where('is_parent',0)->where('parent_id',$task->sub_module_id)->get(['id','name']);
+        return view('tasks.show', compact('task','modules','sub_modules','sub_sub_modules'));
     }
 
     public function update(Request $request, Task $task)

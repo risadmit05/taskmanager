@@ -22,6 +22,7 @@ Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 Route::middleware(['auth'])->group(function () {
     Route::get('/ajaxSearchGetModuleById/{id}', [ModuelController::class, 'findModuleById']);
     Route::get('/ajaxSearchGetSubModuleById/{id}', [ModuelController::class, 'findSubModuleById']);
+//    Route::get('/ajaxSearchGetSubSubModuleById/{id}', [ModuelController::class, 'findSubSubModuleById']);
 
     Route::controller(MailController::class)->prefix('mail')->name('mail.')->group(function () {
         Route::get('/', 'index')->name('inbox');

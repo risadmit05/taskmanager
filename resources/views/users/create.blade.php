@@ -34,13 +34,9 @@
                         <label for="designation_id" class="form-label">Designation</label>
                         <select name="designation_id" id="designation_id" class="form-select" required>
                             <option value="">Select Designation</option>
-                            <option value="1">Designation 1</option>
-                            <option value="2">Designation 2</option>
-                            <option value="3">Designation 3</option>
-                            <option value="4">Designation 4</option>
-{{--                            @foreach($designations as $designation)--}}
-{{--                                <option value="{{ $designation->id }}">{{ $designation->name }}</option>--}}
-{{--                            @endforeach--}}
+                            @foreach($designations as $designation)
+                                <option value="{{$designation->code??''}}">{{$designation->name??''}}</option>
+                            @endforeach
                         </select>
                         @error('designation_id')
                         <span class="text-danger">{{ $message }}</span>
@@ -50,12 +46,9 @@
                         <label for="role_id" class="form-label">Role</label>
                         <select name="role_id" id="role_id" class="form-select" required>
                             <option value="">Select Role</option>
-                            <option value="1">Role 1</option>
-                            <option value="2">Role 2</option>
-                            <option value="3">Role 3</option>
-{{--                            @foreach($roles as $role)--}}
-{{--                                <option value="{{ $role->id }}">{{ $role->name }}</option>--}}
-{{--                            @endforeach--}}
+                            @foreach($user_roles as $user_role)
+                                <option value="{{$user_role->code??''}}">{{$user_role->name??''}}</option>
+                            @endforeach
                         </select>
                         @error('role_id')
                         <span class="text-danger">{{ $message }}</span>
