@@ -5,6 +5,11 @@
 @section('content')
     <div class="container mb-3">
         <h2 class="mb-4 shadow-sm p-3 rounded bg-white">Create Modules</h2>
+        @if(session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
         <div class="card border-0 shadow-sm m-auto" style="max-width: 600px;">
             <div class="card-body">
                 <form action="{{ route('modules.store') }}" method="POST">
@@ -54,21 +59,22 @@
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+@endsection
+@section('footer_js')
     <script>
-        $(document).ready(function() {
-            $('#project_id').on('change', function() {
+        $(document).ready(function () {
+            $('#project_id').on('change', function () {
                 var project_id = $(this).val();
                 // alert(divition_id);
                 if (project_id) {
                     $.ajax({
                         url: '{{ url("/ajaxSearchGetModuleById") }}' + '/' + project_id,
                         type: 'GET',
-                        success: function(data) {
+                        success: function (data) {
                             $('#module_id').empty();
                             if (data && Object.keys(data).length > 0) {
                                 $('#module_id').append('<option value="">Select Module</option>');
-                                $.each(data, function(key, value) {
+                                $.each(data, function (key, value) {
                                     $('#module_id').append('<option value="' + value.id + '">' + value.name + '</option>');
                                 });
                             } else {
@@ -81,18 +87,18 @@
                 }
             });
 
-            $('#module_id').on('change', function() {
+            $('#module_id').on('change', function () {
                 var module_id = $(this).val();
                 // alert(divition_id);
                 if (module_id) {
                     $.ajax({
                         url: '{{ url("/ajaxSearchGetSubModuleById") }}' + '/' + module_id,
                         type: 'GET',
-                        success: function(data) {
+                        success: function (data) {
                             $('#sub_module_id').empty();
                             if (data && Object.keys(data).length > 0) {
                                 $('#sub_module_id').append('<option value="">Select Sub Module</option>');
-                                $.each(data, function(key, value) {
+                                $.each(data, function (key, value) {
                                     $('#sub_module_id').append('<option value="' + value.id + '">' + value.name + '</option>');
                                 });
                             } else {

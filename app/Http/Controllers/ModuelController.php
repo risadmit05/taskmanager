@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Module;
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
 class ModuelController extends Controller
@@ -59,22 +60,29 @@ class ModuelController extends Controller
      */
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'project_id' => 'required|integer|exists:projects,id',
+            'module_id' => 'nullable|integer|exists:modules,id',
+            'sub_module_id' => 'nullable|integer|exists:modules,id',
+            'name' => 'required|string|max:100',
+        ], [
+            'project_id.required' => 'The project is required.',
+            'project_id.integer' => 'The project must be an integer.',
+            'project_id.exists' => 'The selected project does not exist.',
+            'module_id.integer' => 'The module must be an integer.',
+            'module_id.exists' => 'The selected module does not exist.',
+            'sub_module_id.integer' => 'The sub-module must be an integer.',
+            'sub_module_id.exists' => 'The selected sub-module does not exist.',
+            'name.required' => 'The name field is required.',
+            'name.string' => 'The name must be a valid string.',
+            'name.max' => 'The name cannot exceed 100 characters.',
+        ]);
+        if ($validator->fails()) {
+            return redirect()->route('modules.create')->with('error', 'Module not created.');
+        }
+        $parent_id = $request->sub_module_id ?? $request->module_id;
+        $is_parent = $request->module_id === null && $request->sub_module_id === null ? 1 : 0;
 
-        $parent_id = null;
-        $is_parent = null;
-//        dd($request);
-        if($request->module_id == null && $request->sub_module_id == null){
-            $parent_id = null;
-            $is_parent = 1;
-        }
-        if($request->module_id != null && $request->sub_module_id == null){
-            $parent_id = $request->module_id;
-            $is_parent = 0;
-        }
-        if($request->module_id != null && $request->sub_module_id != null){
-            $parent_id = $request->sub_module_id;
-            $is_parent = 0;
-        }
         $user = new Module();
         $user->project_id = $request->project_id;
         $user->parent_id = $parent_id;

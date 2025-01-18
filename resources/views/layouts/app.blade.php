@@ -219,22 +219,7 @@
             </div>
         </footer>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        function updateDateTime() {
-            const now = new Date();
-            const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-            const day = dayNames[now.getDay()];
-            const date = now.toLocaleDateString(['en-US'], { day: 'numeric', month: 'long', year: 'numeric' });
-            const time = now.toLocaleTimeString();
-
-            document.getElementById('currentDateTime').innerText = `${day}, ${date}  ${time}`;
-        }
-
-        updateDateTime();
-        setInterval(updateDateTime, 1000);
-    </script>
+    @include('layouts.script')
 </body>
 
 </html>
