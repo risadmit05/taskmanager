@@ -167,6 +167,12 @@
                     <i class="bi bi-file"></i> Files
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->is('lookups*') ? 'active' : '' }}"
+                    href="{{ route('lookups.index') }}">
+                    <i class="bi bi-folder"></i> Lookups
+                </a>
+            </li>
         </ul>
     </div>
     <div class="content d-flex flex-column">
@@ -209,7 +215,7 @@
         <footer class="mt-auto py-3 text-center">
             <div class="container">
                 <span class="text-muted">&copy; {{ date('Y') }} Task Manager | Developed by <a
-                        href="https://github.com/arafat-web" target="_blank">Arafat Hossain Ar</a> </span>
+                        href="#" target="_blank">Multibrand Infotech Ltd</a> </span>
             </div>
         </footer>
     </div>
