@@ -21,14 +21,17 @@ class Task extends Model
         'status',
     ];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+
 
     public function project()
     {
         return $this->belongsTo(Project::class);
+    }
+
+
+    public function teamTasks()
+    {
+        return $this->hasMany(TaskTeam::class, 'task_id');
     }
 
     public function getStatusColorAttribute()

@@ -35,6 +35,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('projects/{project}/tasks', [TaskController::class, 'index'])->name('projects.tasks.index');
     Route::post('projects/{project}/tasks', [TaskController::class, 'store'])->name('projects.tasks.store');
 
+    Route::get('tasks', [TaskController::class, 'indexList'])->name('tasks.index');
     Route::get('tasks/{task}', [TaskController::class, 'show'])->name('tasks.show');
     Route::put('tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
     Route::post('tasks/{task}/update-status', [TaskController::class, 'updateStatus']);
@@ -57,12 +58,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('checklist-items/{checklistItem}/update-status', [ChecklistItemController::class, 'updateStatus'])->name('checklist-items.update-status');
     Route::get('/', function () {
         $user = Auth::user();
-        $tasksCount = $user->tasks()->count();
+        $tasksCount = $user->taskTeams()->count();
+//        dd($tasksCount);
         $routinesCount = $user->routines()->count();
         $notesCount = $user->notes()->count();
         $remindersCount = $user->reminders()->count();
         $filesCount = $user->files()->count();
-        $recentTasks = $user->tasks()->latest()->take(5)->get();
+        $recentTasks = $user->taskTeams()->latest()->take(5)->get();
         $todayRoutines = $user->routines()->whereDate('start_time', now())->get();
         $recentNotes = $user->notes()->latest()->take(5)->get();
 

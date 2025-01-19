@@ -25,6 +25,17 @@
         .kanban-item.invisible {
             opacity: 0.4;
         }
+        .select2{
+            width: 100% !important;
+        }
+        .select2-container--default .select2-selection--multiple {
+            border-color: #dee2e6;
+            padding: 5px !important;
+        }
+        .select2-container--default.select2-container--focus .select2-selection--multiple {
+             border: solid #dee2e6 1px !important;
+            outline: 0;
+        }
     </style>
     <div class="container">
         <div class="bg-white align-items-center mb-4 shadow-sm p-3 rounded">
@@ -190,7 +201,7 @@
                                 <div class="col-md-4">
                                     <div class="mb-3">
                                         <label for="user_id" class="form-label">Assign To <span style="color:red;">*</span></label>
-                                        <select name="user_id" id="user_id" class="form-select" required>
+                                        <select name="user_id[]" id="user_id" class="form-select" multiple="multiple" required>
                                             <option value="{{auth()->user()->id}}">Self</option>
                                             @foreach ($users as $user)
                                                 <option value="{{$user->id}}">{{$user->name}}</option>
@@ -356,5 +367,10 @@
                 height: 180
             });
         });
+        $('#user_id').select2({
+            dropdownParent: $('#createTaskModal'),
+            placeholder: "Select Users",
+            // allowClear: true
+        }).val(null).trigger('change');
     </script>
 @endsection

@@ -33,7 +33,13 @@
                                     @endif
                                 </p>
 
-                                <p class="card-text"><strong>Assign To:</strong> {{ $task->user->name }}</p>
+                                <p class="card-text"><strong>Assign To:</strong>
+                                    @if(isset($task->teamTasks))
+                                        @foreach($task->teamTasks as $team)
+                                            {{ $team->user->name }},
+                                        @endforeach
+                                    @endif
+                                </p>
 
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                     data-bs-target="#editTaskModal"> <i class="bi bi-pencil-square"></i> </button>
