@@ -11,6 +11,9 @@ class Task extends Model
     protected $fillable = [
         'user_id',
         'project_id',
+        'module_id',
+        'sub_module_id',
+        'sub_sub_module_id',
         'title',
         'description',
         'due_date',
@@ -18,14 +21,17 @@ class Task extends Model
         'status',
     ];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+
 
     public function project()
     {
         return $this->belongsTo(Project::class);
+    }
+
+
+    public function teamTasks()
+    {
+        return $this->hasMany(TaskTeam::class, 'task_id');
     }
 
     public function getStatusColorAttribute()

@@ -38,10 +38,27 @@ class Project extends Model
     {
         return $this->hasMany(Task::class);
     }
+    public function todoTasks()
+    {
+        return $this->hasMany(Task::class)->where('status','=','to_do');
+    }
+    public function inprogressTasks()
+    {
+        return $this->hasMany(Task::class)->where('status','=','in_progress');
+    }
+
+    public function completedTasks()
+    {
+        return $this->hasMany(Task::class)->where('status','=','completed');
+    }
 
     public function files()
     {
         return $this->hasMany(File::class);
+    }
+    public function modules()
+    {
+        return $this->hasMany(Module::class);
     }
 
     public function getStatusAttribute()

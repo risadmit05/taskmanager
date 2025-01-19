@@ -15,6 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('project_id')->constrained()->onDelete('cascade');
+            $table->integer('module_id');
+            $table->integer('sub_module_id')->nullable();
+            $table->integer('sub_sub_module_id')->nullable();
             $table->string('title');
             $table->text('description')->nullable();
             $table->date('due_date')->nullable();

@@ -18,7 +18,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <h5 class="card-title">{{ $task->title }}</h5>
-                                <p class="card-text">{{ $task->description }}</p>
+                                <p class="card-text">{!! $task->description !!}</p>
                                 <p class="card-text"><strong>Due Date:</strong> {{ $task->due_date }}</p>
                                 <p class="card-text"><strong>Priority:</strong> <span
                                         class="badge {{ $task->priority == 'low' ? 'bg-success' : ($task->priority == 'medium' ? 'bg-warning' : 'bg-danger') }}">{{ ucfirst($task->priority) }}</span>
@@ -33,7 +33,13 @@
                                     @endif
                                 </p>
 
-                                <p class="card-text"><strong>Assign To:</strong> {{ $task->user->name }}</p>
+                                <p class="card-text"><strong>Assign To:</strong>
+                                    @if(isset($task->teamTasks))
+                                        @foreach($task->teamTasks as $team)
+                                            {{ $team->user->name }},
+                                        @endforeach
+                                    @endif
+                                </p>
 
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                     data-bs-target="#editTaskModal"> <i class="bi bi-pencil-square"></i> </button>
@@ -163,7 +169,7 @@
         </div>
 
         <!-- Edit Task Modal -->
-        <div class="modal fade" id="editTaskModal" tabindex="-1" aria-labelledby="editTaskModalLabel"
+        <div class="modal fade modal-lg" id="editTaskModal" tabindex="-1" aria-labelledby="editTaskModalLabel"
             aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -177,52 +183,131 @@
                         </div>
                         <div class="modal-body">
                             <div class="mb-3">
-                                <label for="title" class="form-label">Title</label>
+                                <label for="title" class="form-label">Title <span
+                                        style="color:red;">*</span></label>
                                 <input type="text" name="title" id="title" class="form-control"
-                                    value="{{ $task->title }}" required>
+                                       value="{{ $task->title }}" required>
                                 @error('title')
-                                    <span class="text-danger">{{ $message }}</span>
+                                <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
-                            <div class="mb-3">
-                                <label for="description" class="form-label">Description</label>
-                                <textarea name="description" id="description" class="form-control">{{ $task->description }}</textarea>
-                                @error('description')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="mb-3">
-                                <label for="due_date" class="form-label">Due Date</label>
-                                <input type="date" name="due_date" id="due_date" class="form-control"
-                                    value="{{ $task->due_date }}">
-                                @error('due_date')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="mb-3">
-                                <label for="priority" class="form-label">Priority</label>
-                                <select name="priority" id="priority" class="form-select" required>
-                                    <option value="low" {{ $task->priority == 'low' ? 'selected' : '' }}>Low</option>
-                                    <option value="medium" {{ $task->priority == 'medium' ? 'selected' : '' }}>Medium
-                                    </option>
-                                    <option value="high" {{ $task->priority == 'high' ? 'selected' : '' }}>High</option>
-                                </select>
-                                @error('priority')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="mb-3">
-                                <label for="status" class="form-label">Status</label>
-                                <select name="status" id="status" class="form-select" required>
-                                    <option value="to_do" {{ $task->status == 'to_do' ? 'selected' : '' }}>To Do</option>
-                                    <option value="in_progress" {{ $task->status == 'in_progress' ? 'selected' : '' }}>In
-                                        Progress</option>
-                                    <option value="completed" {{ $task->status == 'completed' ? 'selected' : '' }}>
-                                        Completed</option>
-                                </select>
-                                @error('status')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="module_id" class="form-label">Module <span
+                                                style="color:red;">*</span></label>
+                                        <select name="module_id" id="module_id" class="form-select" required>
+                                            <option value="">Select Module</option>
+                                            @if($modules)
+                                                @foreach($modules as $module)
+                                                    <option
+                                                        value="{{$module->id??''}}" {{$module->id == $task->module_id?'selected':''}}>{{$module->name??''}}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                        @error('module_id')
+                                        <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="sub_module_id" class="form-label">Sub Module</label>
+                                        <select name="sub_module_id" id="sub_module_id" class="form-select">
+                                            <option value="">Select Sub Module</option>
+                                            @if($sub_modules)
+                                                @foreach($sub_modules as $sub_module)
+                                                    <option
+                                                        value="{{$sub_module->id??''}}" {{$sub_module->id == $task->sub_module_id?'selected':''}}>{{$sub_module->name??''}}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                        @error('sub_module_id')
+                                        <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="sub_sub_module_id" class="form-label">Sub Module</label>
+                                        <select name="sub_sub_module_id" id="sub_sub_module_id" class="form-select">
+                                            <option value="">Select Sub Sub Module</option>
+                                            @if($sub_sub_modules)
+                                                @foreach($sub_sub_modules as $sub_sub_module)
+                                                    <option
+                                                        value="{{$sub_sub_module->id??''}}" {{$sub_sub_module->id == $task->sub_sub_module_id?'selected':''}}>{{$sub_sub_module->name??''}}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                        @error('sub_sub_module_id')
+                                        <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="due_date" class="form-label">Due Date <span
+                                                style="color:red;">*</span></label>
+                                        <input type="date" name="due_date" id="due_date" class="form-control"
+                                               value="{{ $task->due_date }}" required>
+                                        @error('due_date')
+                                        <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="priority" class="form-label">Priority <span
+                                                style="color:red;">*</span></label>
+                                        <select name="priority" id="priority" class="form-select" required>
+                                            <option value="low" {{ $task->priority == 'low' ? 'selected' : '' }}>Low
+                                            </option>
+                                            <option value="medium" {{ $task->priority == 'medium' ? 'selected' : '' }}>
+                                                Medium
+                                            </option>
+                                            <option value="high" {{ $task->priority == 'high' ? 'selected' : '' }}>
+                                                High
+                                            </option>
+                                        </select>
+                                        @error('priority')
+                                        <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="status" class="form-label">Status <span
+                                                style="color:red;">*</span></label>
+                                        <select name="status" id="status" class="form-select" required>
+                                            <option value="to_do" {{ $task->status == 'to_do' ? 'selected' : '' }}>To
+                                                Do
+                                            </option>
+                                            <option
+                                                value="in_progress" {{ $task->status == 'in_progress' ? 'selected' : '' }}>
+                                                In
+                                                Progress
+                                            </option>
+                                            <option
+                                                value="completed" {{ $task->status == 'completed' ? 'selected' : '' }}>
+                                                Completed
+                                            </option>
+                                        </select>
+                                        @error('status')
+                                        <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="mb-3">
+                                        <label for="description" class="form-label">Description <span
+                                                style="color:red;">*</span></label>
+                                        <textarea name="description" id="description"
+                                                  class="form-control" required>{!! $task->description !!}</textarea>
+                                        @error('description')
+                                        <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -235,6 +320,9 @@
         </div>
     </div>
 
+
+@endsection
+@section('footer_js')
     <script>
         let timer;
         let seconds = 0;
@@ -282,11 +370,11 @@
             const url = '{{ route('checklist-items.update-status', ':id') }}'.replace(':id', itemId);
             const checkbox = document.getElementById(`checklist-item-checkbox-${itemId}`);
             fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                })
+                method: 'GET',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+            })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
@@ -326,12 +414,12 @@
             const formData = new FormData(form);
 
             fetch(form.action, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: formData
-                })
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: formData
+            })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
@@ -349,12 +437,12 @@
             const formData = new FormData(form);
 
             fetch('{{ route('checklist-items.store', $task->id) }}', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: formData
-                })
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: formData
+            })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
@@ -386,6 +474,60 @@
                     }
                 })
                 .catch(error => console.error('Error:', error));
+        });
+    </script>
+    <script>
+        $('#module_id').on('change', function () {
+            var module_id = $(this).val();
+            // alert(divition_id);
+            if (module_id) {
+                $.ajax({
+                    url: '{{ url("/ajaxSearchGetSubModuleById") }}' + '/' + module_id,
+                    type: 'GET',
+                    success: function (data) {
+                        $('#sub_module_id').empty();
+                        if (data && Object.keys(data).length > 0) {
+                            $('#sub_module_id').append('<option value="">Select Sub Module</option>');
+                            $.each(data, function (key, value) {
+                                $('#sub_module_id').append('<option value="' + value.id + '">' + value.name + '</option>');
+                            });
+                        } else {
+                            $('#sub_module_id').append('<option value=""> No Data Available </option>');
+                        }
+                        // $("#permanent_district_id").trigger("change");
+                        $("#sub_module_id").trigger("change");
+                        $("#sub_sub_module_id").html('<option value="">Select Sub Sub Module</option>');
+                    }
+                });
+            }
+        });
+        $('#sub_module_id').on('change', function () {
+            var sub_module_id = $(this).val();
+            if (sub_module_id) {
+                $.ajax({
+                    url: '{{ url("/ajaxSearchGetSubModuleById") }}' + '/' + sub_module_id,
+                    type: 'GET',
+                    success: function (data) {
+                        $('#sub_sub_module_id').empty();
+                        if (data && Object.keys(data).length > 0) {
+                            $('#sub_sub_module_id').append('<option value="">Select Sub Module</option>');
+                            $.each(data, function (key, value) {
+                                $('#sub_sub_module_id').append('<option value="' + value.id + '">' + value.name + '</option>');
+                            });
+                        } else {
+                            $('#sub_sub_module_id').append('<option value=""> No Data Available </option>');
+                        }
+                        $("#sub_sub_module_id").trigger("change");
+                    }
+                });
+            }
+        });
+        $(document).ready(function() {
+            $('#description').summernote({
+                placeholder: 'Write news description',
+                tabsize: 2,
+                height: 180
+            });
         });
     </script>
 @endsection
